@@ -468,4 +468,11 @@ public class ConfigurationKeys {
 	 * If set to {@code true}, no further {@code lombok.config} files will be checked.
 	 */
 	public static final ConfigurationKey<Boolean> STOP_BUBBLING = new ConfigurationKey<Boolean>("config.stopBubbling", "Tell the configuration system it should stop looking for other configuration files (default: false).") {};
+
+	/**
+	 * lombok configuration: {@code lombok.experimental.hasser.flagUsage} = {@code WARNING} | {@code ERROR}.
+	 *
+	 * If set, <em>any</em> usage of {@code @Hasser} results in a warning / error.
+	 */
+	public static final ConfigurationKey<FlagUsageType> HASSER_FLAG_USAGE = new ConfigurationKey<FlagUsageType>("lombok.experimental.hasser.flagUsage", "Emit a warning or error if @Hasser is used.") {};
 }

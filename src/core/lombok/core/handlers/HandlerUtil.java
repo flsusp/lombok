@@ -283,7 +283,29 @@ public class HandlerUtil {
 	public static String toWitherName(AST<?, ?, ?> ast, AnnotationValues<Accessors> accessors, CharSequence fieldName, boolean isBoolean) {
 		return toAccessorName(ast, accessors, fieldName, isBoolean, "with", "with", false);
 	}
-	
+
+	/**
+	 * Generates a hasser name from a given field name.
+	 *
+	 * Strategy:
+	 * <ul>
+	 * <li>Reduce the field's name to its base name by stripping off any prefix (from {@code Accessors}). If the field name does not fit
+	 * the prefix list, this method immediately returns {@code null}.</li>
+	 * <li>Only if {@code isBoolean} is true: Check if the field starts with {@code is} followed by a non-lowercase character.
+	 * If so, replace {@code is} with {@code has} and return that.</li>
+	 * <li>Check if the first character of the field is lowercase. If so, check if the second character
+	 * exists and is title or upper case. If so, uppercase the first character. If not, titlecase the first character.</li>
+	 * <li>Return the prefix plus the possibly title/uppercased first character, and the rest of the field name.</li>
+	 * </ul>
+	 *
+	 * @param accessors Accessors configuration.
+	 * @param fieldName the name of the field.
+	 * @return The hasser name for this field, or {@code null} if this field does not fit expected patterns and therefore cannot be turned into a hasser name.
+	 */
+	public static String toHasserName(AST<?, ?, ?> ast, AnnotationValues<Accessors> accessors, CharSequence fieldName) {
+		return toAccessorName(ast, accessors, fieldName, false, "has", "has", false);
+	}
+
 	private static String toAccessorName(AST<?, ?, ?> ast, AnnotationValues<Accessors> accessors, CharSequence fieldName, boolean isBoolean,
 			String booleanPrefix, String normalPrefix, boolean adhereToFluent) {
 		

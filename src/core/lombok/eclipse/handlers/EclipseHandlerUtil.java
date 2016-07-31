@@ -1009,7 +1009,14 @@ public class EclipseHandlerUtil {
 	public static String toWitherName(EclipseNode field, boolean isBoolean) {
 		return HandlerUtil.toWitherName(field.getAst(), getAccessorsForField(field), field.getName(), isBoolean);
 	}
-	
+
+	/**
+	 * @return the likely hasser name for the stated field. (e.g. private boolean foo; to hasFoo).
+	 */
+	public static String toHasserName(EclipseNode field) {
+		return HandlerUtil.toHasserName(field.getAst(), getAccessorsForField(field), field.getName());
+	}
+
 	/**
 	 * When generating a setter, the setter either returns void (beanspec) or Self (fluent).
 	 * This method scans for the {@code Accessors} annotation and associated config properties to figure that out.

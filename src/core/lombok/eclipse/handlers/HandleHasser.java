@@ -127,6 +127,10 @@ public class HandleHasser extends EclipseAnnotationHandler<Hasser> {
 		}
 
 		FieldDeclaration field = (FieldDeclaration) fieldNode.get();
+		if (isPrimitive(field.type)) {
+			errorNode.addError("@Hasser is only supported on non primitive fields.");
+			return;
+		}
 
 		String hasserName = toHasserName(fieldNode);
 

@@ -1,3 +1,3 @@
 class HasserWithPrimitive {
-  @lombok.Getter @lombok.experimental.Hasser boolean foo;
+	@lombok.Getter @lombok.experimental.Hasser boolean foo;
 }

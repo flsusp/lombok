@@ -2,12 +2,12 @@ class HasserWithGetter {
 	Boolean foo;
 	@java.lang.SuppressWarnings("all")
 	@javax.annotation.Generated("lombok")
-	public Boolean isFoo() {
+	public Boolean getFoo() {
 		return this.foo;
 	}
 	@java.lang.SuppressWarnings("all")
 	@javax.annotation.Generated("lombok")
 	public boolean hasFoo() {
-		return this.isFoo() != null;
+		return this.getFoo() != null;
 	}
 }

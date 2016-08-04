@@ -412,7 +412,14 @@ public class JavacHandlerUtil {
 	public static String toGetterName(JavacNode field) {
 		return HandlerUtil.toGetterName(field.getAst(), getAccessorsForField(field), field.getName(), isBoolean(field));
 	}
-	
+
+	/**
+	 * @return the likely hasser name for the stated field. (e.g. private Boolean foo; to hasFoo).
+	 */
+	public static String toHasserName(JavacNode field) {
+		return HandlerUtil.toHasserName(field.getAst(), getAccessorsForField(field), field.getName());
+	}
+
 	/**
 	 * Translates the given field into all possible setter names.
 	 * Convenient wrapper around {@link TransformationsUtil#toAllSetterNames(lombok.core.AnnotationValues, CharSequence, boolean)}.
@@ -683,9 +690,9 @@ public class JavacHandlerUtil {
 		}
 	}
 	
-	private static class GetterMethod {
-		private final Name name;
-		private final JCExpression type;
+	public static class GetterMethod {
+		public final Name name;
+		public final JCExpression type;
 		
 		GetterMethod(Name name, JCExpression type) {
 			this.name = name;
@@ -693,7 +700,7 @@ public class JavacHandlerUtil {
 		}
 	}
 	
-	private static GetterMethod findGetter(JavacNode field) {
+	public static GetterMethod findGetter(JavacNode field) {
 		JCVariableDecl decl = (JCVariableDecl)field.get();
 		JavacNode typeNode = field.up();
 		for (String potentialGetterName : toAllGetterNames(field)) {
@@ -1458,6 +1465,19 @@ public class JavacHandlerUtil {
 			@Override public String[] split(String javadoc) {
 				// step 1: Check if there is a 'GETTER' section. If yes, that becomes the new method's javadoc and we strip that from the original.
 				String[] out = splitJavadocOnSectionIfPresent(javadoc, "GETTER");
+				if (out != null) return out;
+				// failing that, create a copy, but strip @return from the original and @param from the copy, as well as other sections.
+				String copy = javadoc;
+				javadoc = stripLinesWithTagFromJavadoc(javadoc, "@returns?\\s+.*");
+				copy = stripLinesWithTagFromJavadoc(copy, "@param(?:eter)?\\s+.*");
+				copy = stripSectionsFromJavadoc(copy);
+				return new String[] {copy, javadoc};
+			}
+		},
+		HASSER {
+			@Override public String[] split(String javadoc) {
+				// step 1: Check if there is a 'HASSER' section. If yes, that becomes the new method's javadoc and we strip that from the original.
+				String[] out = splitJavadocOnSectionIfPresent(javadoc, "HASSER");
 				if (out != null) return out;
 				// failing that, create a copy, but strip @return from the original and @param from the copy, as well as other sections.
 				String copy = javadoc;
